@@ -10,9 +10,10 @@ CREATE TABLE IF NOT EXISTS accounts(
 CREATE TABLE IF NOT EXISTS vaults(
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
-  isPrivate BOOLEAN NOT NULL DEFAULT false,
+  description TEXT,
+  isPrivate TINYINT NOT NULL DEFAULT 0,
   creatorId VARCHAR(255) NOT NULL,
-  FOREIGN KEY (creatorId) REFERENCES accounts(id)
+  FOREIGN KEY (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
 )default charset utf8 COMMENT '';
 
 CREATE TABLE IF NOT EXISTS keeps(
@@ -23,10 +24,22 @@ CREATE TABLE IF NOT EXISTS keeps(
   views INT DEFAULT 0,
   kept INT DEFAULT 0,
   creatorId VARCHAR(255) NOT NULL,
-  FOREIGN KEY (creatorId) REFERENCES accounts(id)
+  FOREIGN KEY (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
+)default charset utf8 COMMENT '';
+
+CREATE TABLE IF NOT EXISTS vaultkeeps(
+  id INT AUTO_INCREMENT NOT NULL primary key,
+  keepId INT NOT NULL,
+  vaultId INT NOT NULL,
+  creatorId VARCHAR(255) NOT NULL,
+  FOREIGN KEY (creatorId) REFERENCES accounts(id) ON DELETE CASCADE
 )default charset utf8 COMMENT '';
 
 DROP TABLE IF EXISTS keeps;
+DROP TABLE IF EXISTS vaults;
+DROP TABLE IF EXISTS vaultKeeps;
+
+
 SELECT * FROM keeps;
 SELECT * FROM accounts;
 

@@ -67,21 +67,6 @@ namespace keeper.Controllers
       }
     }
 
-    [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<ActionResult<string>> Remove(int id)
-    {
-      try
-      {
-        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-        return _ks.Remove(id, userInfo.Id);
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e.Message);
-      }
-    }
-
 
     [HttpPut("{id}")]
     [Authorize]
@@ -94,6 +79,21 @@ namespace keeper.Controllers
         updateData.CreatorId = userInfo.Id;
         Keep keep = _ks.update(updateData);
         return Ok(keep);
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    public async Task<ActionResult<string>> Remove(int id)
+    {
+      try
+      {
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+        return _ks.Remove(id, userInfo.Id);
       }
       catch (Exception e)
       {

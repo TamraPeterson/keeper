@@ -19,9 +19,17 @@ namespace keeper.Repositories
     internal List<Keep> GetAll()
     {
       string sql = @"
-      SELECT * FROM keeps;
+      SELECT 
+      k.*,
+      a.*
+       FROM keeps k
+       JOIN accounts a ON k.creatorId = a.id;
       ";
-      return _db.Query<Keep>(sql).ToList();
+      return _db.Query<Keep, Account, Keep>(sql, (keep, account) =>
+      {
+        keep.Creator = account;
+        return keep;
+      }).ToList();
     }
 
     internal Keep Create(Keep data)
@@ -40,10 +48,17 @@ namespace keeper.Repositories
     internal Keep getById(int id)
     {
       string sql = @"
-      SELECT * FROM keeps
-      WHERE id = @id;
+      SELECT k.*,
+      a.*
+       FROM keeps k
+       JOIN accounts a ON k.creatorId = a.id
+       WHERE k.id = @id;
       ";
-      return _db.Query<Keep>(sql, new { id }).FirstOrDefault();
+      return _db.Query<Keep, Account, Keep>(sql, (keep, account) =>
+      {
+        keep.Creator = account;
+        return keep;
+      }, new { id }).FirstOrDefault();
     }
 
     internal void update(Keep original)
