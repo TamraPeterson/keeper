@@ -34,6 +34,11 @@ namespace keeper.Services
       return found;
     }
 
+    internal List<Keep> GetProfileKeeps(int id)
+    {
+      return _kr.GetProfileKeeps(id);
+    }
+
     internal Keep update(Keep updateData)
     {
       Keep original = GetById(updateData.Id);
