@@ -73,6 +73,15 @@ namespace keeper.Repositories
       _db.ExecuteScalar(sql, original);
     }
 
+    internal List<Vault> GetAccountVaults(string id)
+    {
+      string sql = @"
+     SELECT * FROM vaults
+      WHERE creatorId = @id;
+     ";
+      return _db.Query<Vault>(sql, new { id }).ToList();
+    }
+
     internal string Remove(int id)
     {
       string sql = @"

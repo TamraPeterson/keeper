@@ -34,7 +34,6 @@ namespace keeper.Controllers
       {
         return BadRequest(e.Message);
       }
-
     }
 
     [HttpDelete("{id}")]
@@ -42,8 +41,8 @@ namespace keeper.Controllers
     {
       try
       {
-        Account user = await HttpContext.GetUserInfoAsync<Account>();
-        _vks.Remove(id, user.Id);
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+        _vks.Remove(id, userInfo.Id);
         return Ok("delorted vaultkeep");
       }
       catch (Exception e)

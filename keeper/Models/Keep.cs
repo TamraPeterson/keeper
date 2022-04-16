@@ -11,4 +11,10 @@ namespace keeper.Models
     public string CreatorId { get; set; }
     public Account? Creator { get; set; }
   }
+
+  public class VKViewModel : Keep
+  {
+    public int ViewKeepId { get; set; }
+    public new string CreatorId { get; set; }
+  }
 }

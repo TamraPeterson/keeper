@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using keeper.Models;
 using keeper.Repositories;
 
@@ -16,22 +15,17 @@ namespace keeper.Services
 
     internal VaultKeep Create(VaultKeep vkdata)
     {
-      VaultKeep exists = _vkr.getById(vkdata.KeepId, vkdata.CreatorId);
-      if (exists != null)
-      {
-        return exists;
-      }
-      return _vkr.create(vkdata);
+      return _vkr.Create(vkdata);
     }
 
-    internal void Remove(int id, string userId)
+    internal string Remove(int id, string userId)
     {
       VaultKeep found = Get(id);
       if (found.CreatorId != userId)
       {
-        throw new Exception("not yours to delete");
+        throw new Exception("not your vaultkeep to delete");
       }
-      _vkr.Remove(id);
+      return _vkr.Remove(id);
     }
 
     private VaultKeep Get(int id)
@@ -44,9 +38,9 @@ namespace keeper.Services
       return found;
     }
 
-    internal List<VaultKeep> GetByVaultId(int id)
-    {
-     return _vkr.GetAll(id);
-    }
+    // internal List<VaultKeep> GetByVaultId(int id)
+    // {
+    //   return _vkr.GetAll(id);
+    // }
   }
 }

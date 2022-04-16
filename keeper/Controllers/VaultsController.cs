@@ -103,20 +103,20 @@ namespace keeper.Controllers
     }
 
     // Get keeps by vault id
-    [HttpGet("{id}/keeps")]
+    // [HttpGet("{id}/keeps")]
 
-    public ActionResult<List<VaultKeep>> GetVaultKeeps(int id)
-    {
-      try
-      {
-        List<VaultKeep> vaultKeeps = _vks.GetByVaultId(id);
-        return Ok(vaultKeeps);
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e.Message);
-      }
-    }
+    // public ActionResult<List<VaultKeep>> GetVaultKeeps(int id)
+    // {
+    //   try
+    //   {
+    //     List<VaultKeep> vaultKeeps = _vks.GetByVaultId(id);
+    //     return Ok(vaultKeeps);
+    //   }
+    //   catch (Exception e)
+    //   {
+    //     return BadRequest(e.Message);
+    //   }
+    // }
 
   }
 }

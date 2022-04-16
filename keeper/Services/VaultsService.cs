@@ -53,7 +53,10 @@ namespace keeper.Services
       }
     }
 
-
+    internal List<Vault> GetAccountVaults(string id)
+    {
+      return _vr.GetAccountVaults(id);
+    }
 
     internal string Remove(int id, string userId)
     {

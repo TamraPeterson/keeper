@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using System;
 using System.Data;
-using System.Linq;
 using Dapper;
 using keeper.Models;
 
@@ -29,7 +28,7 @@ namespace keeper.Repositories
       return _db.QueryFirstOrDefault<VaultKeep>(sql, new { keepId, accountId });
     }
 
-    internal VaultKeep create(VaultKeep data)
+    internal VaultKeep Create(VaultKeep data)
     {
       string sql = @"
       INSERT INTO vaultkeeps
@@ -43,25 +42,30 @@ namespace keeper.Repositories
       return data;
     }
 
-    internal void Remove(int id)
+    internal string Remove(int id)
     {
       string sql = @"
-      DELETE FROM vaultkeeps WHERE id = @id LIMIT 1;
+      DELETE FROM vaultkeeps 
+      WHERE id = @id LIMIT 1;
       ";
-      _db.ExecuteScalar(sql, new { id });
+      int rows = _db.Execute(sql, new { id });
+      if (rows > 0)
+      {
+        return "vaultkeep delorted";
+      }
+      throw new Exception("error on remove vaultkeep");
     }
 
-    internal List<VaultKeep> GetAll(int vaultId)
-    {
-      string sql = @"
-      SELECT 
-      vk.* ,
-      a.*
-      FROM vaultkeeps vk
-      JOIN accounts a ON vk.creatorId = a.id
-      WHERE v.vaultId = @vaultId;";
-      return _db.Query<VaultKeep, Account, VaultKeep>(sql, new { vaultId }).ToList();
-    }
+    // internal List<VaultKeep> GetAll(int id)
+    // {
+    //   string sql = @"
+    //   SELECT 
+    //   vk.* ,
+    //   a.*
+    //   FROM vaultkeeps vk
+    //   JOIN accounts a ON vk.creatorId = a.id;";
+    //   return _db.Query<VaultKeep, Account, VaultKeep>(sql, new{id}).ToList();
+    // }
 
     internal VaultKeep Get(int id)
     {
