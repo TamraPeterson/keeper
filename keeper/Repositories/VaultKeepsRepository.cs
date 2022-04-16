@@ -42,6 +42,25 @@ namespace keeper.Repositories
       return data;
     }
 
+
+    // Get Vaultkeeps or Get Keeps by Vault Id
+    // internal List<VaultKeep> GetKeepsByVaultId(int id)
+    // {
+    //   string sql = @"
+    //   SELECT 
+    //   a.*,
+    //   v.*,
+    //   k.*,
+    //   vk.id AS vaultkeepId
+    //   FROM vaultkeeps vk
+    //   JOIN vaults v on v.id = vk.vaultId
+    //   JOIN accounts a ON a.id = vk.creatorId
+    //   JOIN keeps k on k.id = vk.keepId
+    //   WHERE vk.vaultId = @id;
+    //   ";
+    //   return _db.Query<Vault, VKViewModel, VKViewModel>(sql, new { id }).ToList();
+    // }
+
     internal string Remove(int id)
     {
       string sql = @"

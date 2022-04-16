@@ -40,6 +40,12 @@ namespace keeper.Services
 
     // internal List<VaultKeep> GetByVaultId(int id)
     // {
+    //   return _vkr.GetKeepsByVaultId(id);
+
+    // }
+
+    // internal List<VaultKeep> GetByVaultId(int id)
+    // {
     //   return _vkr.GetAll(id);
     // }
   }

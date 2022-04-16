@@ -37,13 +37,24 @@ CREATE TABLE IF NOT EXISTS vaultkeeps(
 
 DROP TABLE IF EXISTS keeps;
 DROP TABLE IF EXISTS vaults;
-DROP TABLE IF EXISTS vaultKeeps;
+DROP TABLE IF EXISTS vaultkeeps;
 
 
 SELECT * FROM keeps;
+SELECT * FROM vaults;
+
 SELECT * FROM accounts;
+SELECT * FROM vaultkeeps;
+
 
 INSERT INTO keeps
 (name, description, img, creatorId)
 VALUES 
 ("Cow", "This is a cute cow", "https://images.unsplash.com/photo-1546445317-29f4545e9d53?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=702&q=80", "6234f2ff8e822c2a6080865b" );
+
+SELECT 
+  vk.*,
+  k.*
+  FROM vaultkeeps vk
+  JOIN keeps k on k.id = vk.keepId
+  WHERE vk.vaultId = @id;

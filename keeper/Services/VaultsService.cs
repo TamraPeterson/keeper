@@ -31,6 +31,10 @@ namespace keeper.Services
       {
         throw new Exception("no vault by that id");
       }
+      else if (found.IsPrivate == true)
+      {
+        throw new Exception("That vault is private");
+      }
       return found;
     }
 
@@ -51,6 +55,11 @@ namespace keeper.Services
       {
         throw new Exception("you cant edit a vault you didnt create");
       }
+    }
+
+    internal List<Vault> GetProfileVaults(string id)
+    {
+      return _vr.GetProfileVaults(id);
     }
 
     internal List<Vault> GetAccountVaults(string id)

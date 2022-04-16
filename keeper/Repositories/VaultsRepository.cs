@@ -73,6 +73,25 @@ namespace keeper.Repositories
       _db.ExecuteScalar(sql, original);
     }
 
+    internal List<Vault> GetProfileVaults(string id)
+    {
+      string sql = @"
+      SELECT 
+      a.*,
+      v.*,
+      vk.id As vaultkeepId
+      FROM vaultkeeps vk
+      JOIN vaults v ON v.id = vk.vaultId
+      JOIN accounts a ON a.id = v.creatorId
+      WHERE vk.creatorId = @id;
+      ";
+      return _db.Query<Account, Vault, Vault>(sql, (a, vk) =>
+      {
+        vk.Creator = a;
+        return vk;
+      }, new { id }).ToList();
+    }
+
     internal List<Vault> GetAccountVaults(string id)
     {
       string sql = @"

@@ -41,6 +41,8 @@ namespace keeper
       services.AddTransient<VaultsService>();
       services.AddTransient<VaultKeepsRepository>();
       services.AddTransient<VaultKeepsService>();
+      services.AddTransient<ProfilesRepository>();
+      services.AddTransient<ProfilesService>();
 
 
     }

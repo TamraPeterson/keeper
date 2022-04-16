@@ -34,7 +34,7 @@ namespace keeper.Services
       return found;
     }
 
-    internal List<Keep> GetProfileKeeps(int id)
+    internal List<Keep> GetProfileKeeps(string id)
     {
       return _kr.GetProfileKeeps(id);
     }
