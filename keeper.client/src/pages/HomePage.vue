@@ -49,6 +49,7 @@ export default {
       activeKeep: computed(() => AppState.activeKeep),
       async setActive(keep) {
         try {
+          keep.views++
           AppState.activeKeep = keep
           Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
           logger.log('active keep', keep)

@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid d-flex">
     <div class="row main">
-      <div class="col-6">
-        <img class="image rounded" :src="activeKeep.img" alt="" />
+      <div class="col-md-6">
+        <img class="image rounded pb-2" :src="activeKeep?.img" alt="" />
       </div>
 
-      <div class="col-6">
+      <div class="col-md-6">
         <div class="row justify-content-center align-items-center">
           <div class="col-2">
             <h5 class="m-2">
@@ -25,7 +25,7 @@
               "
             >
               <img class="icon me-2" src="src/assets/img/tinylogo.png" alt="" />
-              {{ activeKeep.kept }}
+              {{ activeKeep?.kept }}
             </h5>
           </div>
 
@@ -38,13 +38,13 @@
 
           <div class="row mt-md-5">
             <div class="col-12 text-center">
-              <h2>{{ activeKeep.name }}</h2>
+              <h2>{{ activeKeep?.name }}</h2>
             </div>
           </div>
 
           <div class="row mt-md-5 justify-content-center" style="height: 350px">
             <div class="col-9">
-              {{ activeKeep.description }}
+              {{ activeKeep?.description }}
             </div>
           </div>
 
@@ -78,11 +78,12 @@
             </div>
             <div class="col-5 text-center d-flex flex-row align-items-center">
               <img
-                class="avatar img-fluid me-2"
-                :src="activeKeep.creator.picture"
+                class="avatar img-fluid me-2 selectable"
+                :src="activeKeep.creator?.picture"
                 alt=""
+                @click="goTo(activeKeep.creatorId)"
               />
-              {{ activeKeep.creator.name }}
+              {{ activeKeep.creator?.name }}
             </div>
           </div>
         </div>
@@ -95,6 +96,8 @@
 <script>
 import { computed } from "@vue/reactivity"
 import { AppState } from "../AppState"
+import { useRoute, useRouter } from "vue-router"
+import { Modal } from "bootstrap"
 export default {
   props: {
     activeKeep: {
@@ -102,9 +105,16 @@ export default {
       required: true,
     }
   },
-  setup() {
+  setup(props) {
+    const router = useRouter();
+    const route = useRoute();
     return {
-      activeKeep: computed(() => AppState.activeKeep)
+      activeKeep: computed(() => AppState.activeKeep),
+      route,
+      goTo(creatorId) {
+        router.push({ name: "Profile", params: { id: creatorId } })
+        Modal.getOrCreateInstance(document.getElementById("keep-details")).hide();
+      }
     }
   }
 }
