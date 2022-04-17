@@ -1,49 +1,51 @@
 <template>
-  <span class="navbar-text">
-    <button
-      class="btn selectable text-success lighten-30 text-uppercase my-2 my-lg-0"
-      @click="login"
-      v-if="!user.isAuthenticated"
-    >
-      Login
-    </button>
+  <div class="row justify-content-center">
+    <span class="navbar-text bg-secondary rounded">
+      <button
+        class="btn selectable text-white text-uppercase my-2 my-lg-0"
+        @click="login"
+        v-if="!user.isAuthenticated"
+      >
+        Login
+      </button>
 
-    <div class="dropdown my-2 my-lg-0" v-else>
-      <div
-        class="dropdown-toggle selectable"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-        id="authDropdown"
-      >
-        <div v-if="account.picture">
-          <img
-            :src="account.picture"
-            alt="account photo"
-            height="40"
-            class="rounded"
-          />
-          <span class="mx-3 text-success lighten-30">{{ account.name }}</span>
-        </div>
-      </div>
-      <div
-        class="dropdown-menu p-0 list-group w-100"
-        aria-labelledby="authDropdown"
-      >
-        <router-link :to="{ name: 'Account' }">
-          <div class="list-group-item list-group-item-action hoverable">
-            Manage Account
-          </div>
-        </router-link>
+      <div class="dropdown my-2 my-lg-0" v-else>
         <div
-          class="list-group-item list-group-item-action hoverable text-danger"
-          @click="logout"
+          class="dropdown-toggle selectable"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          id="authDropdown"
         >
-          <i class="mdi mdi-logout"></i>
-          logout
+          <div v-if="account.picture">
+            <img
+              :src="account.picture"
+              alt="account photo"
+              height="50"
+              class="ms-1 avatar m-0"
+            />
+            <span class="mx-2 text-white">{{ account.name }}</span>
+          </div>
+        </div>
+        <div
+          class="dropdown-menu p-0 list-group w-100"
+          aria-labelledby="authDropdown"
+        >
+          <router-link :to="{ name: 'Account' }">
+            <div class="list-group-item list-group-item-action hoverable">
+              Manage Account
+            </div>
+          </router-link>
+          <div
+            class="list-group-item list-group-item-action hoverable text-danger"
+            @click="logout"
+          >
+            <i class="mdi mdi-logout"></i>
+            logout
+          </div>
         </div>
       </div>
-    </div>
-  </span>
+    </span>
+  </div>
 </template>
 
 
@@ -80,5 +82,7 @@ export default {
 }
 .hoverable {
   cursor: pointer;
+}
+.avatar {
 }
 </style>

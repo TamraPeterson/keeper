@@ -1,36 +1,109 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo" class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+  <div class="container">
+    <div class="masonry-with-columns">
+      <div
+        class="bg-white m-3 rounded shadow card selectable"
+        @click="setActive(k)"
+        v-for="k in keeps"
+        :key="k.id"
+      >
+        <img class="img img-fluid rounded" :src="k.img" alt="" />
+        <div class="bottom-left">
+          <h5 class="keepname">{{ k.name }}</h5>
+        </div>
+        <img
+          class="img img-fluid avatar bottom-right mb-1"
+          :src="k.creator.picture"
+          alt=""
+        />
+      </div>
     </div>
   </div>
+  <Modal id="keep-details">
+    <template #modal-body><KeepDetails /></template>
+  </Modal>
 </template>
 
+
 <script>
+import { computed } from "@vue/reactivity"
+import { AppState } from "../AppState"
+import { onMounted } from "@vue/runtime-core"
+import { logger } from "../utils/Logger"
+import Pop from "../utils/Pop"
+import { keepsService } from "../services/KeepsService"
+import { Modal } from "bootstrap"
 export default {
-  name: 'Home'
+  name: 'Home',
+  setup() {
+    onMounted(async () => {
+      try {
+        await keepsService.getAll();
+      } catch (error) {
+        logger.error(error)
+        Pop.toast(error.message, 'error')
+      }
+    })
+    return {
+      keeps: computed(() => AppState.keeps),
+      activeKeep: computed(() => AppState.activeKeep),
+      async setActive(keep) {
+        try {
+          AppState.activeKeep = keep
+          Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
+          logger.log('active keep', keep)
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
+      }
+    }
+  }
 }
 </script>
 
-<style scoped lang="scss">
-.home{
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
-  .home-card{
-    width: 50vw;
-    > img{
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
+
+<style lang="scss" scoped>
+.masonry-with-columns {
+  columns: 8 200px;
+  column-gap: 1rem;
+  div {
+    display: inline-block;
+    width: 100%;
   }
+}
+.container {
+  position: relative;
+  color: white;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+.card:hover {
+  transform: scale(1.05);
+  transition: 0.5s;
+}
+.card {
+  transition: 0.5s;
+}
+.avatar {
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+}
+.keepname {
+  text-shadow: 1px 1px 1px black;
+}
+.img {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
 }
 </style>
