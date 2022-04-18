@@ -31,7 +31,7 @@ namespace keeper.Services
       {
         throw new Exception("no vault by that id");
       }
-      else if (found.IsPrivate == true && found.CreatorId != userId)
+      else if (found.IsPrivate == true && found.Creator?.Id != userId)
       {
         throw new Exception("that vault is private");
       }

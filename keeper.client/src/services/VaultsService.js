@@ -22,6 +22,9 @@ class VaultsService {
     AppState.vaults.push(res.data)
     this.getById(data.id)
     return res.data
+  }
+
+  async getVaultKeeps(keepId) {
 
   }
 }

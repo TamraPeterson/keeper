@@ -33,6 +33,7 @@ import { logger } from "../utils/Logger"
 import Pop from "../utils/Pop"
 import { keepsService } from "../services/KeepsService"
 import { Modal } from "bootstrap"
+import { vaultsService } from "../services/VaultsService"
 export default {
   name: 'Home',
   setup() {
@@ -47,10 +48,12 @@ export default {
     return {
       keeps: computed(() => AppState.keeps),
       activeKeep: computed(() => AppState.activeKeep),
+      vaultKeeps: computed(() => AppState.vaultKeeps),
       async setActive(keep) {
         try {
           keep.views++
           AppState.activeKeep = keep
+          await vaultsService.getVaultKeeps(keep.id)
           Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
           logger.log('active keep', keep)
         } catch (error) {

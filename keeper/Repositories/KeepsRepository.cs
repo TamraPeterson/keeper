@@ -50,12 +50,10 @@ namespace keeper.Repositories
       string sql = @"
       SELECT 
      a.*,
-     k.*,
-     vk.id AS vaultkeepId
-      FROM vaultkeeps vk
-      JOIN keeps k ON k.id = vk.keepId
-      JOIN accounts a ON a.id = vk.creatorId
-      WHERE vk.creatorId = @id;
+     k.*
+      FROM keeps k
+      JOIN accounts a ON a.id = k.creatorId
+      WHERE k.creatorId = @id
       ";
       return _db.Query<Account, Keep, Keep>(sql, (a, k) =>
       {

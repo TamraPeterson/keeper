@@ -33,6 +33,12 @@ class KeepsService {
     const res = await api.delete('api/keeps/' + id)
     logger.log('delete keep', res.data)
   }
+
+  async getKeeps(id) {
+    const res = await api.get(`api/vaults/${id}/keeps`)
+    logger.log('getting keeps triggered', res.data)
+    AppState.vaultKeeps = res.data
+  }
 }
 
 export const keepsService = new KeepsService();

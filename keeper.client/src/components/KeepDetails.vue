@@ -50,7 +50,7 @@
 
           <div class="row mt-auto">
             <div class="col-5 text-center">
-              <div class="dropdown">
+              <!-- <div class="dropdown">
                 <button
                   class="btn btn-outline-primary dropdown-toggle"
                   type="button"
@@ -60,12 +60,16 @@
                   aria-expanded="false"
                 >
                   Add To Vault
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
+                </button> -->
+              <!-- </div> -->
+              <div>
+                <h6>Add to vault:</h6>
+                <!-- TODO add v-model editable.value and v-for vaults -->
+                <select @change="selectVault">
+                  <option>vault 1</option>
+                  <option>vault 2</option>
+                  <option>vault 3</option>
+                </select>
               </div>
             </div>
             <div class="col-2">

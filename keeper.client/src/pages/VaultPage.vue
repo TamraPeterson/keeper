@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <h1 class>{{ activeVault?.name }}:</h1>
         <h4>{{ activeVault.description }}</h4>
-        <h5 class="mt-3">Keeps: {{ keeps.length }}</h5>
+        <h5 class="mt-3">Keeps: {{ vaultKeeps.length }}</h5>
       </div>
       <div class="col-md-6 text-end">
         <button
@@ -20,7 +20,7 @@
         <div
           class="bg-white m-3 rounded shadow card selectable"
           @click="setActive(k)"
-          v-for="k in keeps"
+          v-for="k in vaultKeeps"
           :key="k.id"
         >
           <img class="img img-fluid rounded" :src="k.img" alt="" />
@@ -45,19 +45,21 @@ import { AppState } from "../AppState"
 import { useRoute } from "vue-router"
 import { onMounted } from "@vue/runtime-core"
 import { logger } from "../utils/Logger"
+import { keepsService } from "../services/KeepsService"
 export default {
 
   setup() {
     const route = useRoute();
     onMounted(async () => {
-
-      logger.log('found vault')
+      keepsService.getKeeps(route.params.id)
+      logger.log('found vault', route.params.id)
 
     })
     return {
       activeVault: computed(() => AppState.activeVault),
       keeps: computed(() => AppState.keeps),
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+      vaultKeeps: computed(() => AppState.vaultKeeps)
     }
   }
 }
