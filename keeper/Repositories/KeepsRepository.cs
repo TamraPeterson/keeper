@@ -57,10 +57,10 @@ namespace keeper.Repositories
       JOIN accounts a ON a.id = vk.creatorId
       WHERE vk.creatorId = @id;
       ";
-      return _db.Query<Account, Keep, Keep>(sql, (a, vk) =>
+      return _db.Query<Account, Keep, Keep>(sql, (a, k) =>
       {
-        vk.Creator = a;
-        return vk;
+        k.Creator = a;
+        return k;
       }, new { id }).ToList();
     }
 
@@ -95,14 +95,13 @@ namespace keeper.Repositories
       JOIN accounts a ON a.id = vk.creatorId
       WHERE vk.vaultId = @vaultId
       ";
-      return _db.Query<Account, VKViewModel, VaultKeep, VKViewModel>(sql, (a, vkvm, vk) =>
+      return _db.Query<Account, Vault, VKViewModel, VKViewModel>(sql, (a, v, vkvm) =>
       {
         vkvm.Creator = a;
-        vkvm.VaultKeepId = vk.Id;
+        vkvm.VaultKeepId = vkvm.Id;
         return vkvm;
       }, new { vaultId }).ToList();
     }
-    // TODO populate vaultkeepId somewhere?
 
     internal void update(Keep original)
     {

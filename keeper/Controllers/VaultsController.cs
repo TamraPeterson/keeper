@@ -108,19 +108,17 @@ namespace keeper.Controllers
     // Get keeps by vault id
     [HttpGet("{id}/keeps")]
 
-    public async Task<ActionResult<List<VKViewModel>>> GetVaultKeeps(int id)
+    public ActionResult<List<VKViewModel>> GetVaultKeeps(int id)
     {
       try
       {
-        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
-        return Ok(_ks.GetByVaultId(id, userInfo.Id));
+        return Ok(_ks.GetByVaultId(id));
       }
       catch (Exception e)
       {
         return BadRequest(e.Message);
       }
     }
-    // FIXME if a user isn't logged in they can't get vault keeps...
 
   }
 }

@@ -15,7 +15,10 @@
       >
         Create Vault
       </button>
-      <button class="btn btn-primary buttons text-white shadow m-2">
+      <button
+        class="btn btn-primary buttons text-white shadow m-2"
+        @click="newKeep"
+      >
         Create Keep
       </button>
     </div>
@@ -64,6 +67,9 @@
   </Modal>
   <Modal id="vault-form">
     <template #modal-body><VaultForm /></template>
+  </Modal>
+  <Modal id="keep-form">
+    <template #modal-body><KeepForm /></template>
   </Modal>
 </template>
 
@@ -120,6 +126,9 @@ export default {
       },
       async newVault() {
         Modal.getOrCreateInstance(document.getElementById("vault-form")).show();
+      },
+      async newKeep() {
+        Modal.getOrCreateInstance(document.getElementById("keep-form")).show();
       }
     }
   }

@@ -74,14 +74,15 @@ namespace keeper.Services
 
 
     // Get Keeps by Vault id
-    internal List<VKViewModel> GetByVaultId(int vaultId, string userId)
+    internal List<VKViewModel> GetByVaultId(int vaultId)
     {
       Vault vault = _vr.getById(vaultId);
-      if (vault.IsPrivate == true && vault.CreatorId != userId)
+      if (vault.IsPrivate == true)
       {
-        throw new Exception("you aren't allowed to view that vault's contents");
+        throw new Exception("cant view private vault");
       }
       return _kr.GetByVaultId(vaultId);
+
     }
   }
 }

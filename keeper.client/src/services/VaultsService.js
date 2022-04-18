@@ -11,7 +11,6 @@ class VaultsService {
   }
 
   async create(data) {
-    debugger
     if (data.isPrivate == "false") {
       data.isPrivate = false
     } else { data.isPrivate = true }

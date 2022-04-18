@@ -71,8 +71,9 @@
             <div class="col-2">
               <h3>
                 <i
-                  class="mdi mdi-delete-outline text-primary"
+                  class="mdi mdi-delete-outline text-primary selectable"
                   title="delete"
+                  @click="remove(activeKeep.id)"
                 ></i>
               </h3>
             </div>
@@ -98,6 +99,9 @@ import { computed } from "@vue/reactivity"
 import { AppState } from "../AppState"
 import { useRoute, useRouter } from "vue-router"
 import { Modal } from "bootstrap"
+import { keepsService } from "../services/KeepsService"
+import { logger } from "../utils/Logger"
+import Pop from "../utils/Pop"
 export default {
   props: {
     activeKeep: {
@@ -114,6 +118,15 @@ export default {
       goTo(creatorId) {
         router.push({ name: "Profile", params: { id: creatorId } })
         Modal.getOrCreateInstance(document.getElementById("keep-details")).hide();
+      },
+      remove(id) {
+        try {
+          keepsService.remove(id)
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
+
       }
     }
   }
