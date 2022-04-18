@@ -65,8 +65,8 @@
               <div>
                 <h6>Add to vault:</h6>
                 <!-- TODO add v-model editable.value and v-for vaults -->
-                <select @change="selectVault">
-                  <option>vault 1</option>
+                <select @change="createVaultKeep">
+                  <option>{{ vaults }}</option>
                   <option>vault 2</option>
                   <option>vault 3</option>
                 </select>
@@ -106,6 +106,10 @@ import { Modal } from "bootstrap"
 import { keepsService } from "../services/KeepsService"
 import { logger } from "../utils/Logger"
 import Pop from "../utils/Pop"
+import { onMounted } from "@vue/runtime-core"
+import { vaultsService } from "../services/VaultsService"
+import { profilesService } from "../services/ProfilesService"
+import { accountService } from "../services/AccountService"
 export default {
   props: {
     activeKeep: {
@@ -116,8 +120,19 @@ export default {
   setup(props) {
     const router = useRouter();
     const route = useRoute();
+    onMounted(async () => {
+      try {
+        debugger
+        const userInfo = await accountService.getAccount()
+        await profilesService.getVaultsByProfile(userInfo?.id)
+      } catch (error) {
+        logger.error(error)
+        Pop.toast(error.message, 'error')
+      }
+    });
     return {
       activeKeep: computed(() => AppState.activeKeep),
+      vaults: computed(() => AppState.vaults),
       route,
       goTo(creatorId) {
         router.push({ name: "Profile", params: { id: creatorId } })
@@ -130,7 +145,14 @@ export default {
           logger.error(error)
           Pop.toast(error.message, 'error')
         }
-
+      },
+      async createVaultKeep(data) {
+        try {
+          await vaultKeepsService.create(data)
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
       }
     }
   }

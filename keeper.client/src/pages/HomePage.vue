@@ -49,10 +49,10 @@ export default {
       keeps: computed(() => AppState.keeps),
       activeKeep: computed(() => AppState.activeKeep),
       vaultKeeps: computed(() => AppState.vaultKeeps),
+
       async setActive(keep) {
         try {
-          keep.views++
-          AppState.activeKeep = keep
+          await keepsService.getById(keep.id)
           await vaultsService.getVaultKeeps(keep.id)
           Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
           logger.log('active keep', keep)

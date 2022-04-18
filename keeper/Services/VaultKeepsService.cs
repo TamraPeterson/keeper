@@ -7,10 +7,12 @@ namespace keeper.Services
   public class VaultKeepsService
   {
     private readonly VaultKeepsRepository _vkr;
+    private readonly KeepsRepository _kr;
 
-    public VaultKeepsService(VaultKeepsRepository vkr)
+    public VaultKeepsService(VaultKeepsRepository vkr, KeepsRepository kr)
     {
       _vkr = vkr;
+      _kr = kr;
     }
 
     internal VaultKeep Create(VaultKeep vkdata)
@@ -19,7 +21,11 @@ namespace keeper.Services
       {
         throw new Exception("you must be logged in to create a vaultkeep");
       }
+      Keep keep = _kr.getById(vkdata.KeepId);
+      keep.Kept++;
+      _kr.increaseKept(keep);
       return _vkr.Create(vkdata);
+
     }
 
     internal string Remove(int id, string userId)

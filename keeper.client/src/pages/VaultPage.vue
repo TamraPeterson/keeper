@@ -10,6 +10,7 @@
         <button
           v-if="account.id == activeVault.creatorId"
           class="btn btn-primary"
+          @click="deleteVault(activeVault)"
         >
           Delete Vault
         </button>
@@ -46,6 +47,9 @@ import { useRoute } from "vue-router"
 import { onMounted } from "@vue/runtime-core"
 import { logger } from "../utils/Logger"
 import { keepsService } from "../services/KeepsService"
+import { vaultsService } from "../services/VaultsService"
+import Pop from "../utils/Pop"
+import { router } from "../router"
 export default {
 
   setup() {
@@ -59,7 +63,20 @@ export default {
       activeVault: computed(() => AppState.activeVault),
       keeps: computed(() => AppState.keeps),
       account: computed(() => AppState.account),
-      vaultKeeps: computed(() => AppState.vaultKeeps)
+      vaultKeeps: computed(() => AppState.vaultKeeps),
+      async deleteVault(vault) {
+        try {
+          if (await Pop.confirm("Are you sure you want to delete this vault?")) {
+            debugger
+            const userId = vault.creator.id
+            vaultsService.deleteVault(vault.id)
+            router.push({ name: "Profile", params: { id: userId } })
+          }
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
+      }
     }
   }
 }

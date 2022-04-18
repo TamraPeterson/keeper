@@ -33,6 +33,8 @@ namespace keeper.Services
       {
         throw new Exception("no keep by that id");
       }
+      found.Views++;
+      _kr.increaseCount(found);
       return found;
     }
 
@@ -51,6 +53,8 @@ namespace keeper.Services
       _kr.update(original);
       return original;
     }
+
+
 
     private void ValidateUser(string creatorId, Keep original)
     {

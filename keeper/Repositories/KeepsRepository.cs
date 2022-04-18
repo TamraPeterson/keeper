@@ -32,6 +32,25 @@ namespace keeper.Repositories
       }).ToList();
     }
 
+    internal void increaseCount(Keep found)
+    {
+      string sql = @"
+      UPDATE keeps
+      SET
+      views =  @Views
+      WHERE id = @Id;";
+      _db.ExecuteScalar(sql, found);
+    }
+    internal void increaseKept(Keep found)
+    {
+      string sql = @"
+      UPDATE keeps
+      SET
+      kept =  @Kept
+      WHERE id = @Id;";
+      _db.ExecuteScalar(sql, found);
+    }
+
     internal Keep Create(Keep data)
     {
       string sql = @"
