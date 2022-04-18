@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using keeper.Models;
 using keeper.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace keeper.Services
 {
@@ -68,6 +69,13 @@ namespace keeper.Services
         throw new Exception("cant remove a keep that isn't yours");
       }
       return _kr.Remove(id);
+    }
+
+
+    // Get Keeps by Vault id
+    internal List<VKViewModel> GetByVaultId(int vaultId)
+    {
+      return _kr.GetByVaultId(vaultId);
     }
   }
 }

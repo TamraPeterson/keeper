@@ -54,7 +54,7 @@ namespace keeper.Repositories
      vk.id AS vaultkeepId
       FROM vaultkeeps vk
       JOIN keeps k ON k.id = vk.keepId
-      JOIN accounts a ON a.id = k.creatorId
+      JOIN accounts a ON a.id = vk.creatorId
       WHERE vk.creatorId = @id;
       ";
       return _db.Query<Account, Keep, Keep>(sql, (a, vk) =>
@@ -79,6 +79,28 @@ namespace keeper.Repositories
         return keep;
       }, new { id }).FirstOrDefault();
     }
+
+    internal List<VKViewModel> GetByVaultId(int vaultId)
+    {
+      string sql = @"
+      SELECT 
+        a.*,
+        v.*,
+        k.*,
+        vk.id AS vaultkeepId
+      FROM vaultkeeps vk
+      JOIN vaults v ON v.id = vk.vaultId
+      JOIN keeps k ON k.id = vk.keepId
+      JOIN accounts a ON a.id = vk.creatorId
+      WHERE vk.vaultId = @vaultId
+      ";
+      return _db.Query<Account, VKViewModel, VKViewModel>(sql, (a, vkvm) =>
+      {
+        vkvm.Creator = a;
+        return vkvm;
+      }, new { vaultId }).ToList();
+    }
+    // TODO populate vaultkeepId somewhere?
 
     internal void update(Keep original)
     {
