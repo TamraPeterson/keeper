@@ -24,24 +24,24 @@ namespace keeper.Services
       return _vr.Create(vaultData);
     }
 
-    internal Vault GetById(int id)
+    internal Vault GetById(int id, string userId)
     {
       Vault found = _vr.getById(id);
       if (found == null)
       {
         throw new Exception("no vault by that id");
       }
-      else if (found.IsPrivate == true)
+      else if (found.IsPrivate == true && found.CreatorId != userId)
       {
-        throw new Exception("That vault is private");
+        throw new Exception("that vault is private");
       }
       return found;
     }
 
     internal Vault update(Vault updateData)
     {
-      Vault original = GetById(updateData.Id);
-      ValidateUser(updateData.CreatorId, original);
+      Vault original = GetById(updateData.Id, updateData.CreatorId);
+      ValidateUser(updateData.CreatorId, original.CreatorId);
       original.Name = updateData.Name ?? original.Name;
       original.Description = updateData.Description ?? original.Description;
       original.IsPrivate = updateData.IsPrivate != null ? updateData.IsPrivate : original.IsPrivate;
@@ -49,9 +49,9 @@ namespace keeper.Services
       return original;
     }
 
-    private void ValidateUser(string creatorId, Vault original)
+    private void ValidateUser(string creatorId, string vaultCreatorId)
     {
-      if (creatorId != original.CreatorId)
+      if (creatorId != vaultCreatorId)
       {
         throw new Exception("you cant edit a vault you didnt create");
       }
@@ -69,7 +69,7 @@ namespace keeper.Services
 
     internal string Remove(int id, string userId)
     {
-      Vault original = GetById(id);
+      Vault original = GetById(id, userId);
       if (userId != original.CreatorId)
       {
         throw new Exception("cant remove a vault that isn't yours");

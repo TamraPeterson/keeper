@@ -80,6 +80,7 @@ namespace keeper.Repositories
       }, new { id }).FirstOrDefault();
     }
 
+
     internal List<VKViewModel> GetByVaultId(int vaultId)
     {
       string sql = @"
@@ -94,9 +95,10 @@ namespace keeper.Repositories
       JOIN accounts a ON a.id = vk.creatorId
       WHERE vk.vaultId = @vaultId
       ";
-      return _db.Query<Account, VKViewModel, VKViewModel>(sql, (a, vkvm) =>
+      return _db.Query<Account, VKViewModel, VaultKeep, VKViewModel>(sql, (a, vkvm, vk) =>
       {
         vkvm.Creator = a;
+        vkvm.VaultKeepId = vk.Id;
         return vkvm;
       }, new { vaultId }).ToList();
     }

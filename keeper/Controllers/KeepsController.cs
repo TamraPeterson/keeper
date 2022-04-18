@@ -85,7 +85,6 @@ namespace keeper.Controllers
         return BadRequest(e.Message);
       }
     }
-
     [HttpDelete("{id}")]
     [Authorize]
     public async Task<ActionResult<string>> Remove(int id)
@@ -100,7 +99,6 @@ namespace keeper.Controllers
         return BadRequest(e.Message);
       }
     }
-
 
   }
 }

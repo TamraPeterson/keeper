@@ -15,6 +15,10 @@ namespace keeper.Services
 
     internal VaultKeep Create(VaultKeep vkdata)
     {
+      if (vkdata.CreatorId == null)
+      {
+        throw new Exception("you must be logged in to create a vaultkeep");
+      }
       return _vkr.Create(vkdata);
     }
 

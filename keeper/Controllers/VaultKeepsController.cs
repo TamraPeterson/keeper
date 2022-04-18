@@ -14,10 +14,12 @@ namespace keeper.Controllers
   public class VaultKeepsController : ControllerBase
   {
     private readonly VaultKeepsService _vks;
+    private readonly VaultsService _vs;
 
-    public VaultKeepsController(VaultKeepsService vks)
+    public VaultKeepsController(VaultKeepsService vks, VaultsService vs)
     {
       _vks = vks;
+      _vs = vs;
     }
 
     [HttpPost]
@@ -26,6 +28,11 @@ namespace keeper.Controllers
       try
       {
         Account user = await HttpContext.GetUserInfoAsync<Account>();
+        Vault vault = _vs.GetById(data.VaultId, user.Id);
+        if (vault.CreatorId != user.Id)
+        {
+          throw new Exception("you can't add to a vault that doesn't belong to you");
+        }
         data.CreatorId = user.Id;
         VaultKeep created = _vks.Create(data);
         return Ok(created);

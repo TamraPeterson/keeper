@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using keeper.Models;
 using keeper.Repositories;
-using Microsoft.AspNetCore.Mvc;
 
 namespace keeper.Services
 {
   public class KeepsService
   {
     private readonly KeepsRepository _kr;
+    private readonly VaultsRepository _vr;
 
-    public KeepsService(KeepsRepository kr)
+    public KeepsService(KeepsRepository kr, VaultsRepository vr)
     {
       _kr = kr;
+      _vr = vr;
     }
 
     internal List<Keep> GetAll()
@@ -73,8 +74,13 @@ namespace keeper.Services
 
 
     // Get Keeps by Vault id
-    internal List<VKViewModel> GetByVaultId(int vaultId)
+    internal List<VKViewModel> GetByVaultId(int vaultId, string userId)
     {
+      Vault vault = _vr.getById(vaultId);
+      if (vault.IsPrivate == true && vault.CreatorId != userId)
+      {
+        throw new Exception("you aren't allowed to view that vault's contents");
+      }
       return _kr.GetByVaultId(vaultId);
     }
   }
