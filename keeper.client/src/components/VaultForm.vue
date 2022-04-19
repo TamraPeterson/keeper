@@ -32,7 +32,7 @@
         </select>
       </div>
 
-      <button @click="createVault" type="submit" class="btn btn-success mt-3">
+      <button @click="createVault" type="submit" class="btn btn-primary mt-3">
         Create
       </button>
       <!-- <button

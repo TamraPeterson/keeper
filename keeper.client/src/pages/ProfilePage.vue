@@ -9,16 +9,10 @@
       <h5>Keeps: {{ keeps?.length }}</h5>
     </div>
     <div class="col-6 text-end" v-if="profile.id == account.id">
-      <button
-        class="btn btn-primary buttons text-white shadow m-2"
-        @click="newVault"
-      >
+      <button class="btn btn-primary shadow m-2" @click="newVault">
         Create Vault
       </button>
-      <button
-        class="btn btn-primary buttons text-white shadow m-2"
-        @click="newKeep"
-      >
+      <button class="btn btn-primary shadow m-2" @click="newKeep">
         Create Keep
       </button>
     </div>

@@ -29,7 +29,7 @@
         />
       </div>
 
-      <button @click="createKeep" type="submit" class="btn btn-success mt-3">
+      <button @click="createKeep" type="submit" class="btn btn-primary mt-3">
         Create
       </button>
     </form>

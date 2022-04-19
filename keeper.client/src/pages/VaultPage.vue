@@ -64,10 +64,18 @@ export default {
   setup() {
     const route = useRoute();
     onMounted(async () => {
-      AppState.keeps = []
-      vaultsService.getById(route.params.id)
-      vaultsService.getVaultKeeps(route.params.id)
-      logger.log('found vault', route.params.id)
+      try {
+        AppState.keeps = []
+        await vaultsService.getById(route.params.id)
+        await vaultsService.getVaultKeeps(route.params.id)
+        logger.log('found vault', route.params.id)
+      } catch (error) {
+        logger.error(error)
+        Pop.toast(error.message, 'error')
+        router.push({ name: "Home" })
+
+      }
+
 
     })
     return {
@@ -79,7 +87,6 @@ export default {
       async deleteVault(vault) {
         try {
           if (await Pop.confirm("Are you sure you want to delete this vault?")) {
-            debugger
             const userId = vault.creator.id
             vaultsService.deleteVault(vault.id)
             router.push({ name: "Profile", params: { id: userId } })
