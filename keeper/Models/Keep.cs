@@ -15,6 +15,6 @@ namespace keeper.Models
   public class VKViewModel : Keep
   {
     public int VaultKeepId { get; set; }
-    public new string CreatorId { get; set; }
+    public string CreatorId { get; set; }
   }
 }

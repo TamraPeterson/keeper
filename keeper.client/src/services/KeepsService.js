@@ -26,6 +26,7 @@ class KeepsService {
     data.creatorId = AppState.account.id
     const res = await api.post('api/keeps', data)
     logger.log('create keep', res.data)
+    this.getAll()
 
   }
 

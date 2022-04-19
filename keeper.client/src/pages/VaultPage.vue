@@ -2,7 +2,7 @@
   <div class="component">
     <div class="row p-md-5 align-items-center">
       <div class="col-md-6">
-        <h1 class>{{ activeVault?.name }}:</h1>
+        <h1 class>{{ activeVault?.name }}</h1>
         <h4>{{ activeVault.description }}</h4>
         <h5 class="mt-3">Keeps: {{ keeps.length }}</h5>
       </div>
@@ -19,11 +19,15 @@
     <div class="container">
       <div class="masonry-with-columns">
         <div
-          class="bg-white m-3 rounded shadow card selectable"
-          @click="setActive(k)"
+          class="bg-white m-3 rounded shadow card"
           v-for="k in keeps"
           :key="k.id"
         >
+          <i
+            title="delete"
+            class="mdi mdi-delete top-right selectable trash"
+            @click="removeFromVault(k.vaultKeepId)"
+          ></i>
           <img class="img img-fluid rounded" :src="k.img" alt="" />
           <div class="bottom-left">
             <h5 class="keepname">{{ k.name }}</h5>
@@ -54,12 +58,14 @@ import { vaultsService } from "../services/VaultsService"
 import Pop from "../utils/Pop"
 import { router } from "../router"
 import { Modal } from "bootstrap"
+import { vaultKeepsService } from "../services/VaultKeepsService"
 export default {
 
   setup() {
     const route = useRoute();
     onMounted(async () => {
       AppState.keeps = []
+      vaultsService.getById(route.params.id)
       vaultsService.getVaultKeeps(route.params.id)
       logger.log('found vault', route.params.id)
 
@@ -93,6 +99,18 @@ export default {
           logger.error(error)
           Pop.toast(error.message, 'error')
         }
+      },
+      async removeFromVault(id) {
+        try {
+          if (await Pop.confirm("Are you sure you want to remove this from your vault?")) {
+            await vaultKeepsService.delete(id)
+            await vaultsService.getVaultKeeps(id)
+          }
+
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
       }
     }
   }
@@ -113,6 +131,11 @@ export default {
   position: relative;
   color: white;
 }
+.top-right {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+}
 
 .bottom-left {
   position: absolute;
@@ -125,19 +148,22 @@ export default {
   bottom: 8px;
   right: 16px;
 }
-.card:hover {
-  transform: scale(1.05);
-  transition: 0.5s;
-}
-.card {
-  transition: 0.5s;
-}
+// .card:hover {
+//   transform: scale(1.05);
+//   transition: 0.5s;
+// }
+// .card {
+//   transition: 0.5s;
+// }
 .avatar {
   border-radius: 50%;
   height: 35px;
   width: 35px;
 }
 .keepname {
+  text-shadow: 1px 1px 1px black;
+}
+.trash {
   text-shadow: 1px 1px 1px black;
 }
 </style>

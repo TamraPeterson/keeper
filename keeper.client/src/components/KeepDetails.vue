@@ -50,7 +50,7 @@
 
           <div class="row mt-auto">
             <div class="col-5 text-center">
-              <div>
+              <div v-if="account.id">
                 <h6>Add to vault:</h6>
                 <!-- TODO add v-model editable.value and v-for vaults -->
                 <select v-model="vaultId">
@@ -69,6 +69,7 @@
             <div class="col-2">
               <h3>
                 <i
+                  v-if="activeKeep.creatorId == account.id"
                   class="mdi mdi-delete-outline text-primary selectable"
                   title="delete"
                   @click="remove(activeKeep.id)"

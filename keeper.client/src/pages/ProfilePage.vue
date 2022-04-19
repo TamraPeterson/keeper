@@ -8,7 +8,7 @@
       <h5 class="mt-md-3">Vaults: {{ vaults?.length }}</h5>
       <h5>Keeps: {{ keeps?.length }}</h5>
     </div>
-    <div class="col-6 text-end">
+    <div class="col-6 text-end" v-if="profile.id == account.id">
       <button
         class="btn btn-primary buttons text-white shadow m-2"
         @click="newVault"
@@ -36,6 +36,11 @@
         alt=""
         @click="getVaultById(v.id)"
       />
+      <i
+        v-if="v.isPrivate == true"
+        class="mdi mdi-lock text-white keepname top-right"
+        title="private vault"
+      ></i>
       <h6 class="ps-2 bottom-left text-white keepname">{{ v.name }}</h6>
     </div>
   </div>
@@ -116,7 +121,15 @@ export default {
       },
       async getVaultById(id) {
         try {
+          AppState.activeVault = {}
           await vaultsService.getById(id)
+          logger.log('get vault private?', AppState.activeVault.isPrivate)
+          if (AppState.activeVault.isPrivate && AppState.account.id != AppState.activeVault.creatorId) {
+            Pop.toast('You cant view a private vault')
+            router.push({ name: "Home" })
+
+            return
+          }
           router.push({ name: "Vault", params: { id } })
         } catch (error) {
           logger.error(error)
@@ -163,6 +176,11 @@ export default {
 .bottom-right {
   position: absolute;
   bottom: 8px;
+  right: 16px;
+}
+.top-right {
+  position: absolute;
+  top: 8px;
   right: 16px;
 }
 .card:hover {

@@ -102,20 +102,17 @@ namespace keeper.Repositories
     {
       string sql = @"
       SELECT 
-        a.*,
-        v.*,
         k.*,
-        vk.id AS vaultkeepId
+        vk.id AS vaultkeepId,
+        a.*
       FROM vaultkeeps vk
-      JOIN vaults v ON v.id = vk.vaultId
       JOIN keeps k ON k.id = vk.keepId
       JOIN accounts a ON a.id = vk.creatorId
       WHERE vk.vaultId = @vaultId
       ";
-      return _db.Query<Account, Vault, VKViewModel, VKViewModel>(sql, (a, v, vkvm) =>
+      return _db.Query< VKViewModel, Account, VKViewModel>(sql, (vkvm, a) =>
       {
         vkvm.Creator = a;
-        vkvm.VaultKeepId = vkvm.Id;
         return vkvm;
       }, new { vaultId }).ToList();
     }

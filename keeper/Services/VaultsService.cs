@@ -57,9 +57,13 @@ namespace keeper.Services
       }
     }
 
-    internal List<Vault> GetProfileVaults(string id)
+    internal List<Vault> GetProfileVaults(string id, string userId)
     {
+      if(id == userId){
       return _vr.GetProfileVaults(id);
+      }
+      return _vr.GetPublicProfileVaults(id);
+      
     }
 
     internal List<Vault> GetAccountVaults(string id)
