@@ -34,12 +34,14 @@ import Pop from "../utils/Pop"
 import { keepsService } from "../services/KeepsService"
 import { Modal } from "bootstrap"
 import { vaultsService } from "../services/VaultsService"
+import { accountService } from "../services/AccountService"
 export default {
   name: 'Home',
   setup() {
     onMounted(async () => {
       try {
         await keepsService.getAll();
+        await accountService.getAccount();
       } catch (error) {
         logger.error(error)
         Pop.toast(error.message, 'error')
@@ -49,11 +51,11 @@ export default {
       keeps: computed(() => AppState.keeps),
       activeKeep: computed(() => AppState.activeKeep),
       vaultKeeps: computed(() => AppState.vaultKeeps),
-
+      account: computed(() => AppState.account),
       async setActive(keep) {
         try {
           await keepsService.getById(keep.id)
-          await vaultsService.getVaultKeeps(keep.id)
+          // await vaultsService.getVaultKeeps(keep.id) FIXME this needs a vault id in order to work
           Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
           logger.log('active keep', keep)
         } catch (error) {

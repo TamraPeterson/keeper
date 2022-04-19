@@ -1,10 +1,14 @@
+import { AppState } from "../AppState";
+import { logger } from "../utils/Logger";
 import { api } from "./AxiosService";
 
 class VaultKeepsService {
 
-  create(data) {
+  async create(data) {
     const res = await api.post('api/vaultkeeps', data)
+    logger.log('creating vaultkeep', res.data)
+    AppState.vaultKeeps.push(res.data)
   }
 }
 
-export const vaultkeepsService = new VaultKeepsService();
+export const vaultKeepsService = new VaultKeepsService();

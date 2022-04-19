@@ -4,7 +4,7 @@
       <div class="col-md-6">
         <h1 class>{{ activeVault?.name }}:</h1>
         <h4>{{ activeVault.description }}</h4>
-        <h5 class="mt-3">Keeps: {{ vaultKeeps.length }}</h5>
+        <h5 class="mt-3">Keeps: {{ keeps.length }}</h5>
       </div>
       <div class="col-md-6 text-end">
         <button
@@ -21,7 +21,7 @@
         <div
           class="bg-white m-3 rounded shadow card selectable"
           @click="setActive(k)"
-          v-for="k in vaultKeeps"
+          v-for="k in keeps"
           :key="k.id"
         >
           <img class="img img-fluid rounded" :src="k.img" alt="" />
@@ -30,13 +30,16 @@
           </div>
           <img
             class="img img-fluid avatar bottom-right mb-1"
-            :src="k.creator.picture"
+            :src="k.creator?.picture"
             alt=""
           />
         </div>
       </div>
     </div>
   </div>
+  <Modal id="keep-details">
+    <template #modal-body><KeepDetails /></template>
+  </Modal>
 </template>
 
 
@@ -50,12 +53,14 @@ import { keepsService } from "../services/KeepsService"
 import { vaultsService } from "../services/VaultsService"
 import Pop from "../utils/Pop"
 import { router } from "../router"
+import { Modal } from "bootstrap"
 export default {
 
   setup() {
     const route = useRoute();
     onMounted(async () => {
-      keepsService.getKeeps(route.params.id)
+      AppState.keeps = []
+      vaultsService.getVaultKeeps(route.params.id)
       logger.log('found vault', route.params.id)
 
     })
@@ -64,6 +69,7 @@ export default {
       keeps: computed(() => AppState.keeps),
       account: computed(() => AppState.account),
       vaultKeeps: computed(() => AppState.vaultKeeps),
+
       async deleteVault(vault) {
         try {
           if (await Pop.confirm("Are you sure you want to delete this vault?")) {
@@ -72,6 +78,17 @@ export default {
             vaultsService.deleteVault(vault.id)
             router.push({ name: "Profile", params: { id: userId } })
           }
+        } catch (error) {
+          logger.error(error)
+          Pop.toast(error.message, 'error')
+        }
+      },
+      async setActive(keep) {
+        try {
+          await keepsService.getById(keep.id)
+          await vaultsService.getVaultKeeps(keep.id)
+          Modal.getOrCreateInstance(document.getElementById("keep-details")).show();
+          logger.log('active keep', keep)
         } catch (error) {
           logger.error(error)
           Pop.toast(error.message, 'error')

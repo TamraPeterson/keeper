@@ -50,26 +50,20 @@
 
           <div class="row mt-auto">
             <div class="col-5 text-center">
-              <!-- <div class="dropdown">
-                <button
-                  class="btn btn-outline-primary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Add To Vault
-                </button> -->
-              <!-- </div> -->
               <div>
                 <h6>Add to vault:</h6>
                 <!-- TODO add v-model editable.value and v-for vaults -->
-                <select @change="createVaultKeep">
-                  <option>{{ vaults }}</option>
-                  <option>vault 2</option>
-                  <option>vault 3</option>
+                <select v-model="vaultId">
+                  <option v-for="v in vaults" :key="v.id" :value="v.id">
+                    {{ v.name }}
+                  </option>
                 </select>
+                <button
+                  class="btn btn-primary p-1"
+                  @click="addToVault(activeKeep.id)"
+                >
+                  +
+                </button>
               </div>
             </div>
             <div class="col-2">
@@ -106,33 +100,40 @@ import { Modal } from "bootstrap"
 import { keepsService } from "../services/KeepsService"
 import { logger } from "../utils/Logger"
 import Pop from "../utils/Pop"
-import { onMounted } from "@vue/runtime-core"
-import { vaultsService } from "../services/VaultsService"
+import { onMounted, ref } from "@vue/runtime-core"
+import { vaultKeepsService } from "../services/VaultKeepsService"
 import { profilesService } from "../services/ProfilesService"
 import { accountService } from "../services/AccountService"
+import { vaultsService } from "../services/VaultsService"
 export default {
   props: {
     activeKeep: {
       type: Object,
       required: true,
+    },
+    account: {
+      type: Object,
+      required: true
     }
   },
   setup(props) {
+    const vaultId = ref('')
     const router = useRouter();
     const route = useRoute();
     onMounted(async () => {
       try {
-        debugger
-        const userInfo = await accountService.getAccount()
-        await profilesService.getVaultsByProfile(userInfo?.id)
+        const account = AppState.account
+        profilesService.getVaultsByProfile(account.id)
       } catch (error) {
         logger.error(error)
         Pop.toast(error.message, 'error')
       }
     });
     return {
+      vaultId,
       activeKeep: computed(() => AppState.activeKeep),
       vaults: computed(() => AppState.vaults),
+      account: computed(() => AppState.account),
       route,
       goTo(creatorId) {
         router.push({ name: "Profile", params: { id: creatorId } })
@@ -146,9 +147,11 @@ export default {
           Pop.toast(error.message, 'error')
         }
       },
-      async createVaultKeep(data) {
+      async addToVault(keepId) {
         try {
-          await vaultKeepsService.create(data)
+          const newVaultKeep = { keepId: keepId, vaultId: vaultId.value }
+          logger.log('adding to vault', newVaultKeep)
+          await vaultKeepsService.create(newVaultKeep)
         } catch (error) {
           logger.error(error)
           Pop.toast(error.message, 'error')
@@ -179,14 +182,13 @@ export default {
 
 .image {
   height: 600px;
-  width: 550px;
+  width: 100%;
   object-fit: cover;
 }
 p {
   text-align: center;
 }
 .icon {
-  // background: url("src/assets/img/tinylogo.png");
   height: 18px;
   width: 18px;
   display: block;
