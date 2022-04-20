@@ -108,11 +108,19 @@ namespace keeper.Controllers
     // Get keeps by vault id
     [HttpGet("{vaultId}/keeps")]
 
-    public ActionResult<List<VKViewModel>> GetVaultKeeps(int vaultId)
+    public async Task<ActionResult<List<VKViewModel>>> GetVaultKeeps(int vaultId)
     {
       try
       {
-        return Ok(_ks.GetByVaultId(vaultId));
+        Account userInfo = await HttpContext.GetUserInfoAsync<Account>();
+    List<VKViewModel> keeps = _ks.GetByVaultId(vaultId);
+    Vault vault = _vs.GetById(vaultId, userInfo.Id);
+    if(vault.IsPrivate ==true && userInfo?.Id != vault.CreatorId){
+      throw new Exception("that private vault aint yos");
+    }else if(vault.IsPrivate== true && vault.CreatorId == userInfo?.Id){
+      return Ok(keeps);
+    }
+        return Ok(keeps);
       }
       catch (Exception e)
       {
